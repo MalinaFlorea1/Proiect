@@ -1,5 +1,5 @@
-Documentație Proiect Cloud
-I.	Introducere. Noțiuni teoretice RESTful API
+# Documentație Proiect Cloud
+##	Introducere. Noțiuni teoretice RESTful API
 	API RESTful este o interfață de program de aplicație (API) care folosește solicitări HTTP la datele GET, PUT, POST și DELETE. API pentru un site web este codul care permite două programe software să comunice între ele. API precizează modul corect pentru un dezvoltator de a scrie un program care solicită servicii de la un sistem de operare sau o altă aplicație.
 	API RESTful - denumită, de asemenea, un serviciu web RESTful sau API REST - se bazează pe transferul reprezentativ de stat (REST), un stil arhitectural și o abordare a comunicațiilor utilizate deseori în dezvoltarea serviciilor web.
 	Tehnologia REST este de regulă preferată decât cea mai robustă tehnologie SOAP (Simple Object Access Protocol), deoarece REST folosește mai puțin lățime de bandă, ceea ce o face mai potrivită pentru utilizarea eficientă a internetului.
@@ -7,7 +7,7 @@ I.	Introducere. Noțiuni teoretice RESTful API
 	API RESTful utilizează metodologii HTTP existente definite prin protocolul RFC 2616. Ei folosesc GET pentru a prelua o resursă; PUT pentru a schimba starea sau a actualiza o resursă, care poate fi un obiect, fișier sau bloc; POST pentru a crea acea resursă; și Ștergeți-l pentru al elimina
 	Cu REST, componentele în rețea sunt o resursă la care utilizatorul solicită acces - o casetă neagră ale cărei detalii de implementare nu sunt clare. Toate apelurile sunt apatride; nimic nu poate fi reținut de serviciul RESTful dintre execuții.
 
-II.	Descriere problemă
+II **	Descriere problemă **
 Pentru implementarea cerințelor proiectului am realizat o pagină web în care am implementat API-uri disponibile prin intermediul Google Developers. Așadar, am implementat opțiunea de conectare prin intermediul contului de Gmail, utilizând API-ul pus la dispoziție de Google. De asemenea, pentru aceasta opțiune, am creat separat și un buton de Sign Out pentru a permite utilizatorilor sa se deconecteze de la contul curent și să se poată conecta ulterior cu altul, sau doar pentru a rămâne deconectați din contul de Gmail.
 Ulterior, folosind un an alt API oferit de cei de la Google, respectiv Calendar, am realizat o interfață care permite utilizatorului să vizioneze propriile evenimente viitoare, fiind disponibile atât numele evenimentelor, status-ul acestora, data de început, adresa de Gmail a celui care a creat evenimetele respective, data creării acestora, cât și data la care se încheierii lor. 
 	În final, folosind de asemenea un API de la Google, și anume cel pentru Gmail, am implementat în pagina web etichetele disponibile, acestea fiind principalele mijloace de clasificare și organizare a mail-urilor utilizatorului. O etichetă are o relație de many-to-many cu mail-urile: un singur mail poate avea mai multe etichete aplicate și o singură etichetă poate fi aplicată mai multor mail-uri. Etichetele vin de asemenea cu două clasificări: sistem și utilizator. Etichetele de sistem, cum ar fi INBOX, TRASH sau SPAM, sunt create intern și nu pot fi create, șterse sau modificate. Cu toate acestea, unele etichete de sistem, cum ar fi INBOX, pot fi aplicate sau eliminate din mail-uri. Etichetele utilizatorului pot fi adăugate, șterse sau modificate de către utilizator sau de către o aplicație.
