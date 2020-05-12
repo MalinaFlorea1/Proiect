@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    
+      <!--Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous" />
+    <!--Bootstrap Scripts -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <title>Google Calendar API Quickstart</title>
+    <meta charset="utf-8" />
+  </head>
+  <body style="background-color:powderblue;">
+    <p style="font-size:240%;text-align:center;">Cloud Computing Project</p>
+    <p style="font-size:200%;text-align:center;">Integration of Google Calendar API & Gmail API</p>
+    <p style="font-size:200%;text-align:right;">Student: Florea Paula Malina</p>
+    <p style="font-size:160%;">Calendar Events</p>
+    
+
+    
+    
+     <table id="tabel2" class="table table-striped table-bordered table-hover table-light">
+        <thead class="thead-dark">
+      <tr  class="table-danger">
+        <th>Event Name</th>
+        <th>Status</th>
+        <th>Start Date</th>
+        <th>Creator</th>
+        <th>Create Date</th>
+        <th>End Date</th>
+      </tr>
+        </thead>
+    </table>
+    
+    <table id="tabel3" class="table table-striped table-hover table-dark">
+        <thead class="thead-dark">
+      <tr class="table-danger">
+        <th>Gmail Labels</th>
+          </tr>
+        </thead>
+    </table>
+    
+    <!--Add buttons to initiate auth sequence and sign out-->
+    <button id="authorize_button" style="display: none;">Authorize</button>
+    <button id="signout_button" style="display: none;">Sign Out</button>
+
+    <pre id="content" style="white-space: pre-wrap;"></pre>
+
+    <script type="text/javascript">
+      // Client ID and API key from the Developer Console
+      var CLIENT_ID = '723487713458-3cbcc19pqo9eare7f9tsl8upn6h9c7ch.apps.googleusercontent.com';
+      var API_KEY = 'AIzaSyC13nfvqcM_aVEaiaAR_JylcooU_00O5js';
+
+      // Array of API discovery doc URLs for APIs used by the quickstart
+      var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"];
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      var SCOPES = "https://www.googleapis.com/auth/calendar.readonly";
+      
+      var CLIENT_ID1 = '723487713458-3ruhd7nf7jvogpck0s44rij3kvfrjb21.apps.googleusercontent.com';
+      var API_KEY1 = 'AIzaSyBbfG-7sBWMkexCFVB3v42wsav0TFvNSPU';
+
+      // Array of API discovery doc URLs for APIs used by the quickstart
+      var DISCOVERY_DOCS1 = ["https://www.googleapis.com/discovery/v1/apis/gmail/v1/rest"];
+
+      // Authorization scopes required by the API; multiple scopes can be
+      // included, separated by spaces.
+      var SCOPES1 = 'https://www.googleapis.com/auth/gmail.readonly';
+
+      var authorizeButton = document.getElementById('authorize_button');
+      var signoutButton = document.getElementById('signout_button');
+
+      /**
+       *  On load, called to load the auth2 library and API client library.
+       */
+      function handleClientLoad() {
+        gapi.load('client:auth2', initClient);
+      }
+
+
+      function handleClientLoad1() {
+        gapi.load('client:auth2', initClient1);
+      }
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+      function initClient() {
+        gapi.client.init({
+          apiKey: API_KEY,
+          clientId: CLIENT_ID,
+          discoveryDocs: DISCOVERY_DOCS,
+          scope: SCOPES
+        }).then(function () {
+          // Listen for sign-in state changes.
+          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+          // Handle the initial sign-in state.
+          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+          authorizeButton.onclick = handleAuthClick;
+          signoutButton.onclick = handleSignoutClick;
+        }, function(error) {
+          appendPre(JSON.stringify(error, null, 2));
+        });
+      }
+
+
+
+      /**
+       *  Initializes the API client library and sets up sign-in state
+       *  listeners.
+       */
+      function initClient1() {
+        gapi.client.init({
+          apiKey: API_KEY1,
+          clientId: CLIENT_ID1,
+          discoveryDocs: DISCOVERY_DOCS1,
+          scope: SCOPES1
+        }).then(function () {
+          // Listen for sign-in state changes.
+          gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+          // Handle the initial sign-in state.
+          updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+          authorizeButton.onclick = handleAuthClick;
+          signoutButton.onclick = handleSignoutClick;
+        }, function(error) {
+          appendPre(JSON.stringify(error, null, 2));
+        });
+      }
+
+
+      /**
+       *  Called when the signed in status changes, to update the UI
+       *  appropriately. After a sign-in, the API is called.
+       */
+      function updateSigninStatus(isSignedIn) {
+        if (isSignedIn) {
+          authorizeButton.style.display = 'none';
+          signoutButton.style.display = 'block';
+          listUpcomingEvents();
+          listLabels();
+        } else {
+          authorizeButton.style.display = 'block';
+          signoutButton.style.display = 'none';
+        }
+      }
+
+      /**
+       *  Sign in the user upon button click.
+       */
+      function handleAuthClick(event) {
+        gapi.auth2.getAuthInstance().signIn();
+      }
+
+      /**
+       *  Sign out the user upon button click.
+       */
+      function handleSignoutClick(event) {
+        gapi.auth2.getAuthInstance().signOut();
+      }
+      function startest(){
+        handleClientLoad1();
+        handleClientLoad();
+      }
+      /**
+       * Append a pre element to the body containing the given message
+       * as its text node. Used to display the results of the API call.
+       *
+       * @param {string} message Text to be placed in pre element.
+       */
+      function appendPre(message) {
+        var pre = document.getElementById('content');
+        var textContent = document.createTextNode(message + '\n');
+        pre.appendChild(textContent);
+      }
+      
+        /**
+       * Print the summary and start datetime/date of the next ten events in
+       * the authorized user's calendar. If no events are found an
+       * appropriate message is printed.
+       */
+      function listUpcomingEvents() {
+        gapi.client.calendar.events.list({
+          'calendarId': 'primary',
+          'timeMin': (new Date()).toISOString(),
+          'showDeleted': false,
+          'singleEvents': true,
+          'maxResults': 10,
+          'orderBy': 'startTime'
+        }).then(function(response) {
+          console.log(response);
+          var events = response.result.items;
+          
+          if (events.length > 0) {
+            for (i = 0; i < events.length; i++) {
+              var event = events[i];
+              var when = event.start.dateTime;
+              if (!when) {
+                when = event.start.date;
+              }
+              $('#tabel2 tr:last').after('<tr><td>'+event.summary + '</td><td> ' + event.status + '</td><td> '+  when + '</td><td>'+  event.creator.email +'</td><td> '+ event.end.dateTime+ '</td><td> '+event.created +'</td></tr>');
+              $()
+            }
+          } else {
+            appendPre('No upcoming events found.');
+          }
+        });
+      }
+      
+      function listLabels() {
+        gapi.client.gmail.users.labels.list({
+          'userId': 'me'
+        }).then(function(response) {
+          console.log(response);
+          var labels = response.result.labels;
+          
+
+          if (labels && labels.length > 0) {
+            for (i = 0; i < labels.length; i++) {
+              var label = labels[i];
+              $('#tabel3 tr:last').after('<tr><td>'+label.name + '</td><td>' );
+              
+            }
+          } else {
+            appendPre('No Labels found.');
+          }
+        });
+      }
+
+
+    </script>
+
+   <script async defer src="https://apis.google.com/js/api.js"
+      onload="this.onload=function(){};startest()"
+      onreadystatechange="if (this.readyState === 'complete') this.onload()">
+    </script>
+  </body>
+</html>
